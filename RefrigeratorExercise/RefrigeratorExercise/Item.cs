@@ -24,6 +24,11 @@ public class Item
         _space = space;
         _allItems.Add(this);
     }
+
+    public int ItemCounter
+    {
+        get { return _itemCounter; }
+    }
     public int IdItem
     {
         get { return _idItem; }
@@ -79,6 +84,11 @@ public class Item
             + "expiry: " + _expiry.ToString()
             + "space: " + _space + "centimeter";
         return printShelf;
+    }
+
+    public bool isExpired()
+    {
+        return (_expiry < DateTime.Now);
     }
 
 

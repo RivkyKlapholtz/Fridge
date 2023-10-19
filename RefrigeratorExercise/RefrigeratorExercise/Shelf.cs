@@ -52,4 +52,69 @@ public class Shelf
         }
         return printShelf;
     }
+
+    public double CalculateSpaceLeftInShelf()
+    {
+        double spaceLeftInShelf = _originalSpace;
+        foreach (Item item in _items)
+        {
+            spaceLeftInShelf -= item.Space;
+        }
+        return spaceLeftInShelf;
+    }
+
+    public void AddItemToShelf(Item item)
+    {
+        _items.Add(item);
+    }
+
+    public bool ItemExistInShelf(int idItem)
+    {
+        foreach (Item item in _items)
+        {
+            if (item.IdItem == idItem) return true;
+        }
+        return false;
+    }
+
+    public Item RemoveItemFromShelf(int idItemToRemove)
+    {
+        Item itemToRemove = null;
+        foreach(Item item in _items)
+        {
+            if (item.IdItem == idItemToRemove)
+            {
+                itemToRemove = item;
+                _items.Remove(itemToRemove);
+                break;
+            }
+        }
+        return itemToRemove;
+    }
+
+    public void CleanShelf()
+    {
+        Item itemToRemove = null;
+        foreach(Item item in _items)
+        {
+            if (item.Expiry < DateTime.Now)
+            {
+                itemToRemove = RemoveItemFromShelf(item.IdItem);
+                item.AllItems.Remove(itemToRemove);
+            }
+        }
+    }
+
+    public List<Item> GetMatchingItemsInShelf(string itemType, string kosherType)
+    {
+        List<Item> itemsMached = new List<Item>();
+        foreach (Item item in _items)
+        {
+            if (item.ItemType.Equals(itemType) && item.KosherType.Equals(kosherType) && (!item.isExpired()))
+            {
+                itemsMached.Add(item);
+            }
+        }
+        return itemsMached;
+    }
 }
