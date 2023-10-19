@@ -7,7 +7,7 @@ public class Item
     private List<Item> _allItems = new List<Item>();
     private int _idItem;
     private string _name;
-    private int _shelfOn;//id of the shelf on which the item is placed
+    private Shelf _shelfOn;//The shelf on which the item is placed
     private string _itemType;//(food, drink)
     private string _kosherType;//(meat, dairy, parve)
     private DateTime _expiry;
@@ -17,7 +17,7 @@ public class Item
     {
         _idItem = ++_itemCounter;
         _name = name;
-        _shelfOn = -1;//Not necessarily that the item goes into the fridge.
+        _shelfOn = null;//Not necessarily that the item goes into the fridge.
         _itemType = itemType;
         _kosherType = kosherType;
         _expiry = new DateTime(expiry.Year, expiry.Month, expiry.Day);
@@ -36,9 +36,13 @@ public class Item
             _name = value;
         }
     }
-    public int ShelfOn
+    public Shelf ShelfOn
     {
         get { return _shelfOn; }
+        set
+        {
+            _shelfOn = value;
+        }
     }
     public string ItemType
     {
