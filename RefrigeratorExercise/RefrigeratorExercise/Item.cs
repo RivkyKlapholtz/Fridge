@@ -78,7 +78,7 @@ public class Item
     {
         string printShelf = "The Item:\n\nid item: " + _idItem
             + "name: " + _name
-            + "on shelf: " + _shelfOn.ToString()
+            + "on shelf: " + _shelfOn.IdShelf
             + "item type: " + _itemType
             + "kosher type: " + _kosherType
             + "expiry: " + _expiry.ToString()

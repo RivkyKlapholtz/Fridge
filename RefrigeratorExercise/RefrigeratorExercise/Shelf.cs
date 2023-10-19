@@ -117,4 +117,32 @@ public class Shelf
         }
         return itemsMached;
     }
+
+    public double CalculateSpaceLeftInShelfWithout(string kosherType, int beforNumberOfDays)
+    {
+        double spaceLeftInShelfWithout = CalculateSpaceLeftInShelf();
+        foreach (Item item in _items)
+        {
+            if (item.KosherType.Equals(kosherType) &&
+                item.Expiry < DateTime.Today.AddDays(beforNumberOfDays))
+            {
+                spaceLeftInShelfWithout += item.Space;
+            }
+        }
+        return spaceLeftInShelfWithout;
+    }
+
+    public void RemoveByKosherAndExpirationInShelf(string kosherType, int beforNumberOfDays)
+    {
+        foreach (Item item in _items)
+        {
+            if (item.KosherType.Equals(kosherType) &&
+                item.Expiry < DateTime.Today.AddDays(beforNumberOfDays))
+            {
+                Console.WriteLine("Remove valid item: \n" + item.ToString());
+                _items.Remove(item);
+                item.AllItems.Remove(item);
+            }
+        }
+    }
 }

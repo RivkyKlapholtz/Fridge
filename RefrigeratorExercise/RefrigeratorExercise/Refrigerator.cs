@@ -148,19 +148,53 @@ public class Refrigerator
         return itemsMatched;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void PreparingForShopping()
+    {
+        if (CalculateSpaceLeftInFridge() >= 20)// *******************
+        {
+            Console.WriteLine("Your frigerator is ready for shopping!");
+        }
+        else
+        {
+            CleanRefrigerator();
+            if (CalculateSpaceLeftInFridge() >= 20)
+            {
+                Console.WriteLine("Your frigerator is ready for shopping!");
+            }
+            else
+            {
+                double spaceWithout = 0;
+                spaceWithout += CalculateSpaceLeftInFridgeWithout("Dairy", 3);
+                if (CalculateSpaceLeftInFridge() >= 20)
+                {
+                    RemoveByKosherAndExpirationInFridge("Dairy", 3);
+                    Console.WriteLine("Your frigerator is ready for shopping!");
+                }
+                else
+                {
+                    spaceWithout += CalculateSpaceLeftInFridgeWithout("Meat", 7);
+                    if (CalculateSpaceLeftInFridge() >= 20)
+                    {
+                        RemoveByKosherAndExpirationInFridge("Meat", 7);
+                        Console.WriteLine("Your frigerator is ready for shopping!");
+                    }
+                    else
+                    {
+                        spaceWithout += CalculateSpaceLeftInFridgeWithout("Parve", 1);
+                        if (CalculateSpaceLeftInFridge() >= 20)
+                        {
+                            RemoveByKosherAndExpirationInFridge("Parve", 1);
+                            Console.WriteLine("Your frigerator is ready for shopping!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("It's not a good time for shopping");
+                        }
+                    }
+                }
+            }
+        }
+    }
     private bool ValidItemType(string itemType)
     {
         List<string> typs = new List<string>() { "Food", "Drink", "food", "drink"};
@@ -172,5 +206,23 @@ public class Refrigerator
         List<string> typs = new List<string>() { "meat", "dairy", "parve", "Meat", "Dairy", "Parve" };
 
         return typs.Contains(kosheType);
+    }
+
+    private double CalculateSpaceLeftInFridgeWithout(string kosherType, int beforNumberOfDays)
+    {
+        double spaceLeftInFridgeWithout = 0;
+        foreach (Shelf shelf in _shelves)
+        {
+           spaceLeftInFridgeWithout += shelf.CalculateSpaceLeftInShelfWithout(kosherType, beforNumberOfDays);
+        }
+        return spaceLeftInFridgeWithout;
+    }
+
+    private void RemoveByKosherAndExpirationInFridge(string kosherType, int beforNumberOfDays)
+    {
+        foreach (Shelf shelf in _shelves)
+        {
+            shelf.RemoveByKosherAndExpirationInShelf(kosherType, beforNumberOfDays);
+        }
     }
 }
