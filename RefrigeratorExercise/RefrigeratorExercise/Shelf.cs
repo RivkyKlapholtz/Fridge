@@ -40,4 +40,16 @@ public class Shelf
     {
         get { return _allShelves; }
     }
+
+    public override string ToString()
+    {
+        string printShelf = "The Shelf:\n\nid shelf: " + _idShelf
+            + "floor number: " + _floorNumber
+            + "originalSpace: " + _originalSpace + " centimeter";
+        foreach (Item item in _items)
+        {
+            printShelf += item.ToString();
+        }
+        return printShelf;
+    }
 }

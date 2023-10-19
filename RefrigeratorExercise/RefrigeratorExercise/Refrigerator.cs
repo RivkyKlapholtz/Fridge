@@ -51,4 +51,18 @@ public class Refrigerator
     {
         get { return _allRefrigerators;}
     }
+
+    public override string ToString()
+    {
+        string printRefrigerator = "The Refrigerator:\n\nid refrigerator: " + _idRefrigerator
+            + "model: " + _model
+            + "color: " + _color
+            + "number of shelves: " + _numberOfShelves;
+        foreach (Shelf shelf in _shelves)
+        {
+            printRefrigerator += shelf.ToString();
+        }
+        return printRefrigerator;
+
+    }
 }
