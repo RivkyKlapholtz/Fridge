@@ -99,6 +99,7 @@ public class Refrigerator
             {
                 item.ShelfOn = shelf;
                 shelf.AddItemToShelf(item);
+                break;
             }
         }
     }
