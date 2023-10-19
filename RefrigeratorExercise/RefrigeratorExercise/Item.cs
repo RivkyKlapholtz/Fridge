@@ -22,6 +22,7 @@ public class Item
         _kosherType = kosherType;
         _expiry = new DateTime(expiry.Year, expiry.Month, expiry.Day);
         _space = space;
+        _allItems.Add(this);
     }
     public int IdItem
     {
@@ -39,10 +40,7 @@ public class Item
     public Shelf ShelfOn
     {
         get { return _shelfOn; }
-        set
-        {
-            _shelfOn = value;
-        }
+        set { _shelfOn = value; }
     }
     public string ItemType
     {
