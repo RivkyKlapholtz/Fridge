@@ -32,13 +32,13 @@ public class Refrigerator
     public string Model
     {
         get { return _model; }
-        set{ _model = value; }
+        set { _model = value; }
     }
 
     public string Color
     {
         get { return _color; }
-        set{ _color = value; }
+        set { _color = value; }
     }
     public double NumberOfShelves
     {
@@ -52,7 +52,7 @@ public class Refrigerator
 
     public List<Refrigerator> AllRefrigerators
     {
-        get { return _allRefrigerators;}
+        get { return _allRefrigerators; }
     }
 
     public override string ToString()
@@ -156,12 +156,14 @@ public class Refrigerator
 
     public void PreparingForShopping()
     {
+        string removedItems = "";
         if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
         {
             Console.WriteLine("Your frigerator is ready for shopping!");
         }
         else
         {
+
             CleanRefrigerator();
             if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
             {
@@ -173,7 +175,8 @@ public class Refrigerator
                 spaceWithout += CalculateSpaceLeftInFridgeWithout("Dairy", 3);
                 if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
                 {
-                    RemoveByKosherAndExpirationInFridge("Dairy", 3);
+                    removedItems += RemoveByKosherAndExpirationInFridge("Dairy", 3);
+                    Console.WriteLine("Valid items reoved:\n" + removedItems);
                     Console.WriteLine("Your frigerator is ready for shopping!");
                 }
                 else
@@ -181,7 +184,8 @@ public class Refrigerator
                     spaceWithout += CalculateSpaceLeftInFridgeWithout("Meat", 7);
                     if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
                     {
-                        RemoveByKosherAndExpirationInFridge("Meat", 7);
+                        removedItems += RemoveByKosherAndExpirationInFridge("Meat", 7);
+                        Console.WriteLine("Valid items reoved:\n" + removedItems);
                         Console.WriteLine("Your frigerator is ready for shopping!");
                     }
                     else
@@ -189,7 +193,8 @@ public class Refrigerator
                         spaceWithout += CalculateSpaceLeftInFridgeWithout("Parve", 1);
                         if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
                         {
-                            RemoveByKosherAndExpirationInFridge("Parve", 1);
+                            removedItems += RemoveByKosherAndExpirationInFridge("Parve", 1);
+                            Console.WriteLine("Valid items reoved:\n" + removedItems);
                             Console.WriteLine("Your frigerator is ready for shopping!");
                         }
                         else
@@ -203,7 +208,7 @@ public class Refrigerator
     }
     public bool ValidItemType(string itemType)
     {
-        List<string> typs = new List<string>() { "Food", "Drink", "food", "drink"};
+        List<string> typs = new List<string>() { "Food", "Drink", "food", "drink" };
 
         return typs.Contains(itemType);
     }
@@ -219,16 +224,18 @@ public class Refrigerator
         double spaceLeftInFridgeWithout = 0;
         foreach (Shelf shelf in _shelves)
         {
-           spaceLeftInFridgeWithout += shelf.CalculateSpaceLeftInShelfWithout(kosherType, beforNumberOfDays);
+            spaceLeftInFridgeWithout += shelf.CalculateSpaceLeftInShelfWithout(kosherType, beforNumberOfDays);
         }
         return spaceLeftInFridgeWithout;
     }
 
-    private void RemoveByKosherAndExpirationInFridge(string kosherType, int beforNumberOfDays)
+    private string RemoveByKosherAndExpirationInFridge(string kosherType, int beforNumberOfDays)
     {
+        string removedItems = "";
         foreach (Shelf shelf in _shelves)
         {
-            shelf.RemoveByKosherAndExpirationInShelf(kosherType, beforNumberOfDays);
+            removedItems += shelf.RemoveByKosherAndExpirationInShelf(kosherType, beforNumberOfDays);
         }
+        return removedItems;
     }
 }

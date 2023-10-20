@@ -8,6 +8,12 @@ class Program
     static void Main(string[] args)
     {
         Refrigerator refrigerator1 = new Refrigerator("My Fridge", "White", 3);
+        Shelf shelf1 = new Shelf(1, 24);
+        Shelf shelf2 = new Shelf(2, 30);
+        Shelf shelf3 = new Shelf(3, 15);
+        refrigerator1.AddShelfToFridge(shelf1);
+        refrigerator1.AddShelfToFridge(shelf2);
+        refrigerator1.AddShelfToFridge(shelf3);
         Refrigerator refrigerator2 = new Refrigerator("My Fridge", "red", 4);
         Refrigerator refrigerator3 = new Refrigerator("My Fridge", "black", 4);
         Refrigerator refrigerator4 = new Refrigerator("My Fridge", "gray", 6);
@@ -33,7 +39,7 @@ class Program
                 switch (choice)
                 {
                     case 1:
-                        Console.WriteLine(refrigerator1.ToString());
+                        PrintItems(refrigerator1);
                         break;
                     case 2:
                         Console.WriteLine(refrigerator1.CalculateSpaceLeftInFridge());
@@ -44,9 +50,9 @@ class Program
                     case 4:
                         RemoveItemFromRefrigerator(refrigerator1);
                         break;
-                    case 5: 
+                    case 5:
                         Console.WriteLine("Checked items: " + refrigerator1.CleanRefrigerator());
-                        break; 
+                        break;
                     case 6:
                         WhatToEat(refrigerator1);
                         break;
@@ -77,7 +83,7 @@ class Program
 
         }
     }
-        
+
     public static List<Item> SortItemsByExpirationDate(List<Item> items)
     {
         return items.OrderBy(item => item.Expiry).ToList();
@@ -90,6 +96,17 @@ class Program
     public static List<Refrigerator> SortRefrigeratorsByFreeSpace(List<Refrigerator> refrigerators)
     {
         return refrigerators.OrderByDescending(refrigerator => refrigerator.CalculateSpaceLeftInFridge()).ToList();
+    }
+
+    public static void PrintItems(Refrigerator refrigerator)
+    {
+        foreach (Shelf shelf in refrigerator.Shelves)
+        {
+            foreach (Item item in shelf.Items)
+            {
+                Console.WriteLine(item.ToString());
+            }
+        }
     }
     private static void AddItem(Refrigerator refrigerator)
     {
@@ -127,7 +144,7 @@ class Program
         {
             Console.WriteLine("Invalid item space. Please enter a valid number.");
         }
-        if(item == null) { Console.WriteLine("Failed to add the item to the refrigerator."); }
+        if (item == null) { Console.WriteLine("Failed to add the item to the refrigerator."); }
         else { refrigerator.AddItemToFridge(item); }
     }
 
@@ -150,7 +167,7 @@ class Program
 
     public static bool ValidInputName(string itemName)
     {
-        return (string.IsNullOrWhiteSpace(itemName));
+        return (!string.IsNullOrEmpty(itemName));
 
     }
 
@@ -166,7 +183,7 @@ class Program
         Console.WriteLine("Please enter a item type and a kosher type:");
         string itemType = Console.ReadLine();
         string kosherType = Console.ReadLine();
-        if (!(refrigerator.ValidItemType(itemType) && refrigerator.ValidKosherType(kosherType))) 
+        if (!(refrigerator.ValidItemType(itemType) && refrigerator.ValidKosherType(kosherType)))
         {
             Console.WriteLine("Invalid input");
         }

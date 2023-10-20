@@ -60,8 +60,6 @@ public class Item
         get { return _expiry; }
         set
         {
-            if (DateTime.Now > value)
-                throw new ArgumentException("Invalid expiry date");
             _expiry = value;
         }
     }
@@ -76,13 +74,13 @@ public class Item
 
     public override string ToString()
     {
-        string printShelf = "The Item:\n\nid item: " + _idItem
+        string printShelf = "\nThe Item:\nid item: " + _idItem
             + ", name: " + _name
             + ", on shelf: " + _shelfOn.IdShelf
             + ", item type: " + _itemType
             + ", kosher type: " + _kosherType
             + ", expiry: " + _expiry.ToString()
-            + ", space: " + _space + "centimeter";
+            + ", space: " + _space + " centimeter ";
         return printShelf;
     }
 

@@ -43,7 +43,7 @@ public class Shelf
 
     public override string ToString()
     {
-        string printShelf = "The Shelf:\n\nid shelf: " + _idShelf
+        string printShelf = "\nThe Shelf:\nid shelf: " + _idShelf
             + ", floor number: " + _floorNumber
             + ", originalSpace: " + _originalSpace + " centimeter";
         foreach (Item item in _items)
@@ -80,7 +80,7 @@ public class Shelf
     public Item RemoveItemFromShelf(int idItemToRemove)
     {
         Item itemToRemove = null;
-        foreach(Item item in _items)
+        foreach (Item item in _items)
         {
             if (item.IdItem == idItemToRemove)
             {
@@ -94,17 +94,25 @@ public class Shelf
 
     public string CleanShelf()
     {
-        Item itemToRemove = null;
         string checkedItems = "";
-        foreach(Item item in _items)
+
+        List<Item> itemsToRemove = new List<Item>();
+
+        foreach (Item item in _items)
         {
             if (item.Expiry < DateTime.Now)
             {
                 checkedItems += item.Name + ", ";
-                itemToRemove = RemoveItemFromShelf(item.IdItem);
-                item.AllItems.Remove(itemToRemove);
+                itemsToRemove.Add(item);
             }
         }
+
+        foreach (Item itemToRemove in itemsToRemove)
+        {
+            RemoveItemFromShelf(itemToRemove.IdItem);
+            itemToRemove.AllItems.Remove(itemToRemove);
+        }
+
         return checkedItems;
     }
 
@@ -135,17 +143,19 @@ public class Shelf
         return spaceLeftInShelfWithout;
     }
 
-    public void RemoveByKosherAndExpirationInShelf(string kosherType, int beforNumberOfDays)
+    public string RemoveByKosherAndExpirationInShelf(string kosherType, int beforNumberOfDays)
     {
+        string removedItems = "";
         foreach (Item item in _items)
         {
             if (item.KosherType.Equals(kosherType) &&
                 item.Expiry < DateTime.Today.AddDays(beforNumberOfDays))
             {
-                Console.WriteLine("Remove valid item: \n" + item.ToString());
+                removedItems += item.ToString();
                 _items.Remove(item);
                 item.AllItems.Remove(item);
             }
         }
+        return removedItems;
     }
 }
