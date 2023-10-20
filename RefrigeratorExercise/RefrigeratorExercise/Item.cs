@@ -77,12 +77,12 @@ public class Item
     public override string ToString()
     {
         string printShelf = "The Item:\n\nid item: " + _idItem
-            + "name: " + _name
-            + "on shelf: " + _shelfOn.IdShelf
-            + "item type: " + _itemType
-            + "kosher type: " + _kosherType
-            + "expiry: " + _expiry.ToString()
-            + "space: " + _space + "centimeter";
+            + ", name: " + _name
+            + ", on shelf: " + _shelfOn.IdShelf
+            + ", item type: " + _itemType
+            + ", kosher type: " + _kosherType
+            + ", expiry: " + _expiry.ToString()
+            + ", space: " + _space + "centimeter";
         return printShelf;
     }
 

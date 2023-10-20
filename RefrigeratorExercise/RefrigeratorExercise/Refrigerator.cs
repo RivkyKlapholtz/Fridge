@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 public class Refrigerator
 {
+    const int FreeSpaceInFridgeBeforeShopping = 20;
+
     private static int _refrigeratorCounter = 0;
     private List<Refrigerator> _allRefrigerators = new List<Refrigerator>();
     private int _idRefrigerator;
@@ -55,9 +58,9 @@ public class Refrigerator
     public override string ToString()
     {
         string printRefrigerator = "The Refrigerator:\n\nid refrigerator: " + _idRefrigerator
-            + "model: " + _model
-            + "color: " + _color
-            + "number of shelves: " + _numberOfShelves;
+            + ", model: " + _model
+            + ", color: " + _color
+            + ", number of shelves: " + _numberOfShelves;
         foreach (Shelf shelf in _shelves)
         {
             printRefrigerator += shelf.ToString();
@@ -122,12 +125,14 @@ public class Refrigerator
         return itemToRemove;
     }
 
-    public void CleanRefrigerator()
+    public string CleanRefrigerator()
     {
+        string checkedItems = "";
         foreach (Shelf shelf in _shelves)
         {
-            shelf.CleanShelf();
+            checkedItems += shelf.CleanShelf();
         }
+        return checkedItems;
     }
 
     public List<Item> GetMatchingItemsInFridge(string itemType, string kosherType)
@@ -151,14 +156,14 @@ public class Refrigerator
 
     public void PreparingForShopping()
     {
-        if (CalculateSpaceLeftInFridge() >= 20)// *******************
+        if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
         {
             Console.WriteLine("Your frigerator is ready for shopping!");
         }
         else
         {
             CleanRefrigerator();
-            if (CalculateSpaceLeftInFridge() >= 20)
+            if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
             {
                 Console.WriteLine("Your frigerator is ready for shopping!");
             }
@@ -166,7 +171,7 @@ public class Refrigerator
             {
                 double spaceWithout = 0;
                 spaceWithout += CalculateSpaceLeftInFridgeWithout("Dairy", 3);
-                if (CalculateSpaceLeftInFridge() >= 20)
+                if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
                 {
                     RemoveByKosherAndExpirationInFridge("Dairy", 3);
                     Console.WriteLine("Your frigerator is ready for shopping!");
@@ -174,7 +179,7 @@ public class Refrigerator
                 else
                 {
                     spaceWithout += CalculateSpaceLeftInFridgeWithout("Meat", 7);
-                    if (CalculateSpaceLeftInFridge() >= 20)
+                    if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
                     {
                         RemoveByKosherAndExpirationInFridge("Meat", 7);
                         Console.WriteLine("Your frigerator is ready for shopping!");
@@ -182,7 +187,7 @@ public class Refrigerator
                     else
                     {
                         spaceWithout += CalculateSpaceLeftInFridgeWithout("Parve", 1);
-                        if (CalculateSpaceLeftInFridge() >= 20)
+                        if (CalculateSpaceLeftInFridge() >= FreeSpaceInFridgeBeforeShopping)
                         {
                             RemoveByKosherAndExpirationInFridge("Parve", 1);
                             Console.WriteLine("Your frigerator is ready for shopping!");
@@ -196,13 +201,13 @@ public class Refrigerator
             }
         }
     }
-    private bool ValidItemType(string itemType)
+    public bool ValidItemType(string itemType)
     {
         List<string> typs = new List<string>() { "Food", "Drink", "food", "drink"};
 
         return typs.Contains(itemType);
     }
-    private bool ValidKosherType(string kosheType)
+    public bool ValidKosherType(string kosheType)
     {
         List<string> typs = new List<string>() { "meat", "dairy", "parve", "Meat", "Dairy", "Parve" };
 

@@ -44,8 +44,8 @@ public class Shelf
     public override string ToString()
     {
         string printShelf = "The Shelf:\n\nid shelf: " + _idShelf
-            + "floor number: " + _floorNumber
-            + "originalSpace: " + _originalSpace + " centimeter";
+            + ", floor number: " + _floorNumber
+            + ", originalSpace: " + _originalSpace + " centimeter";
         foreach (Item item in _items)
         {
             printShelf += item.ToString();
@@ -92,17 +92,20 @@ public class Shelf
         return itemToRemove;
     }
 
-    public void CleanShelf()
+    public string CleanShelf()
     {
         Item itemToRemove = null;
+        string checkedItems = "";
         foreach(Item item in _items)
         {
             if (item.Expiry < DateTime.Now)
             {
+                checkedItems += item.Name + ", ";
                 itemToRemove = RemoveItemFromShelf(item.IdItem);
                 item.AllItems.Remove(itemToRemove);
             }
         }
+        return checkedItems;
     }
 
     public List<Item> GetMatchingItemsInShelf(string itemType, string kosherType)

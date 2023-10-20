@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 
 class Program
@@ -39,6 +40,28 @@ class Program
                         break;
                     case 3:
                         AddItem(refrigerator1);
+                        break;
+                    case 4:
+                        RemoveItemFromRefrigerator(refrigerator1);
+                        break;
+                    case 5: 
+                        Console.WriteLine("Checked items: " + refrigerator1.CleanRefrigerator());
+                        break; 
+                    case 6:
+                        WhatToEat(refrigerator1);
+                        break;
+                    case 7:
+                        SortItem(refrigerator1);
+                        break;
+                    case 8:
+                        SortShelf(refrigerator1);
+                        break;
+                    case 9:
+                        SortRefrigerator(refrigerator1);
+                        break;
+                    case 10:
+                        refrigerator1.PreparingForShopping();
+                        break;
                     case 100:
                         continueRunning = false;
                         break;
@@ -55,24 +78,136 @@ class Program
         }
     }
         
-    public List<Item> SortItemsByExpirationDate(List<Item> items)
+    public static List<Item> SortItemsByExpirationDate(List<Item> items)
     {
         return items.OrderBy(item => item.Expiry).ToList();
     }
 
-    public List<Shelf> SortShelvesByFreeSpace(List<Shelf> shelves)
+    public static List<Shelf> SortShelvesByFreeSpace(List<Shelf> shelves)
     {
         return shelves.OrderByDescending(shelf => shelf.CalculateSpaceLeftInShelf()).ToList();
     }
-    public List<Refrigerator> SortRefrigeratorsByFreeSpace(List<Refrigerator> refrigerators)
+    public static List<Refrigerator> SortRefrigeratorsByFreeSpace(List<Refrigerator> refrigerators)
     {
         return refrigerators.OrderByDescending(refrigerator => refrigerator.CalculateSpaceLeftInFridge()).ToList();
     }
-    public void AddItem(Refrigerator fridge)
+    private static void AddItem(Refrigerator refrigerator)
     {
-        Console.WriteLine("Enter item details: (string name, string itemType, string kosherType, DateTime expiry, double space)");
-        Item item = new Item(Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine(), Console.ReadLine);
+        Item item = null;
+
+        Console.WriteLine("Enter the ItemName");
+        string itemName = Console.ReadLine();
+        Console.WriteLine("Enter the ItemSpace");
+        double itemSpace;
+
+        if (double.TryParse(Console.ReadLine(), out itemSpace))
+        {
+            Console.WriteLine("Enter the ItemExpiryDate (yyyy-MM-dd)");
+            string itemExpiryDate = Console.ReadLine();
+            Console.WriteLine("Enter the Kosher (Parve, Dairy, Meat)");
+            string itemKosher = Console.ReadLine();
+            Console.WriteLine("Enter the ItemType (Food, Drink)");
+            string itemType = Console.ReadLine();
+
+            if (ValidInputName(itemName) &&
+                refrigerator.ValidItemType(itemType) &&
+                refrigerator.ValidKosherType(itemKosher) &&
+                ValidInputExity(itemExpiryDate))
+            {
+                DateTime itemExpiry = DateTime.Parse(itemExpiryDate);
+                item = new Item(itemName, itemType, itemKosher, itemExpiry, itemSpace);
+                Console.WriteLine("Item created successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please check your input and try again.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid item space. Please enter a valid number.");
+        }
+        if(item == null) { Console.WriteLine("Failed to add the item to the refrigerator."); }
+        else { refrigerator.AddItemToFridge(item); }
     }
-       
+
+    private static void RemoveItemFromRefrigerator(Refrigerator refrigerator)
+    {
+        Console.WriteLine("Enter the item ID to remove from the refrigerator:");
+        int itemId = Convert.ToInt32(Console.ReadLine());
+        Item removedItem = null;
+        try
+        {
+            removedItem = refrigerator.RemoveItemFromFridge(itemId);
+        }
+        catch (Exception e) { Console.WriteLine("The item is not in the refrigerator"); }
+
+        if (removedItem != null)
+        {
+            Console.WriteLine($"Item removed: {removedItem.ToString()}");
+        }
+    }
+
+    public static bool ValidInputName(string itemName)
+    {
+        return (string.IsNullOrWhiteSpace(itemName));
+
+    }
+
+    public static bool ValidInputExity(string itemExpiryDate)
+    {
+        return (DateTime.TryParseExact(itemExpiryDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _));
+    }
+
+
+    public static void WhatToEat(Refrigerator refrigerator)
+    {
+        Console.WriteLine("What do you want to eat?");
+        Console.WriteLine("Please enter a item type and a kosher type:");
+        string itemType = Console.ReadLine();
+        string kosherType = Console.ReadLine();
+        if (!(refrigerator.ValidItemType(itemType) && refrigerator.ValidKosherType(kosherType))) 
+        {
+            Console.WriteLine("Invalid input");
+        }
+        else
+        {
+            List<Item> itemsMached = refrigerator.GetMatchingItemsInFridge(itemType, kosherType);
+            foreach (Item item in itemsMached) { Console.WriteLine(item.ToString()); }
+        }
+    }
+
+    public static void SortItem(Refrigerator refrigerator)
+    {
+        List<Item> items = new List<Item>();
+        foreach (Shelf shelf in refrigerator.Shelves)
+        {
+            items.Concat(shelf.Items);
+        }
+        List<Item> sortedItems = SortItemsByExpirationDate(items);
+        foreach (Item item in sortedItems)
+        {
+            Console.WriteLine(item.ToString());
+        }
+    }
+
+    public static void SortShelf(Refrigerator refrigerator)
+    {
+        List<Shelf> sortedShelves = SortShelvesByFreeSpace(refrigerator.Shelves);
+        foreach (Shelf shelf in sortedShelves)
+        {
+            Console.WriteLine(shelf.ToString());
+        }
+    }
+
+    public static void SortRefrigerator(Refrigerator refrigerator)
+    {
+        List<Refrigerator> sortedRefrigerators = SortRefrigeratorsByFreeSpace(refrigerator.AllRefrigerators);
+        foreach (Refrigerator fridge in sortedRefrigerators)
+        {
+            Console.WriteLine(fridge.ToString());
+        }
+    }
+
 
 }
